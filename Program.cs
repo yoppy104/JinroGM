@@ -31,7 +31,7 @@ namespace JinroGM
             _services = new ServiceCollection().BuildServiceProvider();
             _client.MessageReceived += CommandRecieved;
 
-            string token = "Nzg4NDE0NzI2MjY2NTUyMzUw.X9jKbg.udOiR08uJfxE0RUdR2WW3G_34qE";
+            string token = "@@@";
             await _commands.AddModuleAsync<Assembly>(_services);
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
