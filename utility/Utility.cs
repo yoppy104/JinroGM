@@ -27,5 +27,26 @@ namespace JinroGM
             // stringとして結合して返却
             return _builder.ToString();
         }
+
+
+        /// <summary>
+        /// 辞書のキーと値を入れ替える関数
+        /// </summary>
+        /// <typeparam name="Key">元の辞書のキーの型</typeparam>
+        /// <typeparam name="Value">元の辞書の値の型</typeparam>
+        /// <param name="prot_dict">元の辞書</param>
+        /// <returns>キーと値を反転させた辞書</returns>
+        public static Dictionary<Value, Key> SwitchKeyAndValue<Key, Value> (Dictionary<Key, Value> prot_dict)
+        {
+            Dictionary<Value, Key> new_dict = new Dictionary<Value, Key>();
+
+            foreach (KeyValuePair<Key, Value> item in prot_dict)
+            {
+                new_dict.Add(item.Value, item.Key);                
+            }
+
+            return new_dict;
+        }
+
     }
 }
