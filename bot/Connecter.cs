@@ -41,7 +41,7 @@ namespace JinroGM
         }
 
         // アクションメソッド用のデリゲート
-        private delegate Task action(SocketUserMessage message);
+        public delegate Task action(SocketUserMessage message);
 
         // デリゲートを一元管理する辞書
         private Dictionary<string, action> action_method = new Dictionary<string, action>();
@@ -104,17 +104,33 @@ namespace JinroGM
             }
         }
 
+
+        /// <summary>
+        /// メソッドを追加する
+        /// </summary>
+        /// <param name="key">コマンドキー</param>
+        /// <param name="method">アクション関数</param>
+        public void AddListener(string key, action method)
+        {
+            if (key[0] != '@')
+            {
+                Console.WriteLine("[AddListener] keyの先頭が@ではありません。");
+                return;
+            }
+            action_method[key] = method;
+        }
+
+
+
+        /// <summary>
+        /// アクションメソッドの初期設定を行う
+        /// </summary>
         private void SetActionMethod()
         {
-            action_method["@おはよう"] = async delegate (SocketUserMessage message)
+            AddListener("@おはよう", async delegate (SocketUserMessage message)
             {
-                await message.Channel.SendMessageAsync("Hello!");
-            };
-
-            action_method["@切断"] = async delegate (SocketUserMessage message)
-            {
-
-            };
+                await message.Channel.SendMessageAsync("Hello");
+            });
         }
 
 
