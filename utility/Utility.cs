@@ -8,7 +8,6 @@ namespace JinroGM
     {
         private static StringBuilder _builder = new StringBuilder();
 
-
         /// <summary>
         /// ルートディレクトリからの相対パスを返却する
         /// </summary>
