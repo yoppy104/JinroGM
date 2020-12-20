@@ -100,8 +100,19 @@ namespace JinroGM
             }
             else
             {
-                await message.Channel.SendMessageAsync(String.Format("I can't listen this command : [ {0} ]", CommandContext));
+                await SendMessage(message.Channel, String.Format("I can't listen this command : [ {0} ]", CommandContext));
             }
+        }
+
+        /// <summary>
+        /// Discord上にメッセージを送信する
+        /// </summary>
+        /// <param name="channel">送信するチャンネル</param>
+        /// <param name="message">送信するメッセージ</param>
+        /// <returns></returns>
+        public async Task SendMessage(ISocketMessageChannel channel, string message)
+        {
+            await channel.SendMessageAsync(message);
         }
 
 
@@ -129,7 +140,7 @@ namespace JinroGM
         {
             AddListener("@おはよう", async delegate (SocketUserMessage message)
             {
-                await message.Channel.SendMessageAsync("Hello");
+                await SendMessage(message.Channel, "Hello...");
             });
         }
 
