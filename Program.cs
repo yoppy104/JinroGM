@@ -25,6 +25,10 @@ namespace JinroGM
             await _connecter._client.LoginAsync(TokenType.Bot, _connecter._token);
             await _connecter._client.StartAsync();
 
+            // 一般channelにコネクトメッセージを送信
+            var channel = _connecter._client.GetChannel(787349069923221508) as ISocketMessageChannel;
+            await _connecter.SendMessage(channel, "[system message]  Connect Success.");
+
             await Task.Delay(-1);
         }
     }

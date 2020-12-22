@@ -6,7 +6,11 @@ namespace JinroGM
 {
     static class Utility
     {
-        private static StringBuilder _builder = new StringBuilder();
+        // 改行記号
+        public static string _newLine = Environment.NewLine;
+
+        // string 結合クラス
+        public static StringBuilder _builder = new StringBuilder();
 
         /// <summary>
         /// ルートディレクトリからの相対パスを返却する

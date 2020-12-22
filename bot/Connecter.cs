@@ -41,10 +41,10 @@ namespace JinroGM
         }
 
         // アクションメソッド用のデリゲート
-        public delegate Task action(SocketUserMessage message);
+        public delegate Task CommandFunc(SocketUserMessage message);
 
         // デリゲートを一元管理する辞書
-        private Dictionary<string, action> action_method = new Dictionary<string, action>();
+        private Dictionary<string, CommandFunc> action_method = new Dictionary<string, CommandFunc>();
 
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace JinroGM
 
             var CommandContext = message.Content;
 
-            if (CommandContext[0] != '@')  return;
+            if (CommandContext[0] != '!')  return;
 
             if (action_method.ContainsKey(CommandContext))
             {
@@ -112,6 +112,11 @@ namespace JinroGM
         /// <returns></returns>
         public async Task SendMessage(ISocketMessageChannel channel, string message)
         {
+            if (channel == null)
+            {
+                Console.WriteLine(String.Format("[Error Message : Null Reference] : {0}",  message));
+                return;
+            }
             await channel.SendMessageAsync(message);
         }
 
@@ -121,14 +126,15 @@ namespace JinroGM
         /// </summary>
         /// <param name="key">コマンドキー</param>
         /// <param name="method">アクション関数</param>
-        public void AddListener(string key, action method)
+        public void AddListener(string key, CommandFunc method, string explain)
         {
-            if (key[0] != '@')
+            if (key[0] != '!')
             {
-                Console.WriteLine("[AddListener] keyの先頭が@ではありません。");
+                Console.WriteLine("[AddListener] keyの先頭が ! ではありません。");
                 return;
             }
             action_method[key] = method;
+            Command._commandDict.Add(key, explain);
         }
 
 
@@ -138,10 +144,37 @@ namespace JinroGM
         /// </summary>
         private void SetActionMethod()
         {
-            AddListener("@おはよう", async delegate (SocketUserMessage message)
+            // ping によって pong 出力する
+            AddListener("!ping", async (SocketUserMessage message) =>
             {
-                await SendMessage(message.Channel, "Hello...");
-            });
+                await SendMessage(message.Channel, "pong");
+            },
+            "pongと出力（接続確認用）");
+
+            // 送信元のチャンネルの名前とIDを返却する
+            AddListener("!channel_info", async (SocketUserMessage message) =>
+            {
+                await SendMessage(message.Channel, String.Format("[channel name] : {0}", message.Channel.Name));
+                await SendMessage(message.Channel, String.Format("[  channel id   ] : {0}", message.Channel.Id.ToString()));
+            },
+            "送信したチャンネルの情報を表示");
+
+            // 現存するコマンドの一覧を表示する
+            AddListener("!command_list", async (SocketUserMessage message) =>
+            {
+                // 表示するコマンドの一覧を作成する。
+                Utility._builder.Clear();
+                foreach(string key in Command._commandDict.Keys)
+                {
+                    Utility._builder.Append(String.Format("{0}   →   {1}", key, Command._commandDict[key]));
+                    Utility._builder.Append(Utility._newLine);
+                }
+
+                await SendMessage(message.Channel, Utility._builder.ToString());
+
+                Utility._builder.Clear();
+            },
+            "コマンドの一覧を表示");
         }
 
 

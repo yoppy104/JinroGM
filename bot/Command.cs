@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace JinroGM.bot
+namespace JinroGM
 {
-    class Command
+    static class Command
     {
-
+        public static Dictionary<string, string> _commandDict
+        {
+            get;
+        }
+        = new Dictionary<string, string>();
     }
 }
